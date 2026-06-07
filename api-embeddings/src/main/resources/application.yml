@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: api-embeddings
+
+  threads:
+    virtual:
+      enabled: true
+
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      embedding:
+        model: ${OLLAMA_EMBEDDING_MODEL:llama3.2:1b}
+        options:
+          num-ctx: 2048
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    br.com.portfolio: INFO
+    org.springframework.ai: WARN

@@ -20,7 +20,7 @@ services:
       retries: 5
       start_period: 30s
 
-  # ─── Ollama (LLM local — Llama 3.2) ─────────────────────────────────────────
+  # ─── Ollama (Llama 3.2 local) ────────────────────────────────────────────────
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -31,7 +31,6 @@ services:
       - ollama_data:/root/.ollama
     environment:
       OLLAMA_KEEP_ALIVE: "24h"
-    # Inicia o servidor e baixa o modelo Llama 3.2 1B na primeira execução
     entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull llama3.2:1b && wait"]
     healthcheck:
       test: ["CMD-SHELL", "ollama list 2>/dev/null | grep -q 'llama3.2' || exit 1"]
@@ -40,7 +39,30 @@ services:
       retries: 15
       start_period: 300s
 
-  # ─── Instância 1 da API ─────────────────────────────────────────────────────
+  # ─── API Embeddings (microserviço Llama) ─────────────────────────────────────
+  api-embeddings:
+    build:
+      context: ./api-embeddings
+      dockerfile: Dockerfile
+    container_name: api-embeddings
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_EMBEDDING_MODEL: llama3.2:1b
+      SERVER_PORT: 8080
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ─── API Busca Semântica — Instância 1 ───────────────────────────────────────
   api-1:
     build:
       context: .
@@ -53,12 +75,13 @@ services:
       DB_NAME: buscasemantica
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      OLLAMA_BASE_URL: http://ollama:11434
+      EMBEDDING_SERVICE_URL: http://api-embeddings:8080
+      EMBEDDING_MODEL: llama3.2:1b
       SERVER_PORT: 8080
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
+      api-embeddings:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
@@ -67,7 +90,7 @@ services:
       retries: 3
       start_period: 60s
 
-  # ─── Instância 2 da API (Redundância) ───────────────────────────────────────
+  # ─── API Busca Semântica — Instância 2 (redundância) ─────────────────────────
   api-2:
     build:
       context: .
@@ -80,12 +103,13 @@ services:
       DB_NAME: buscasemantica
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      OLLAMA_BASE_URL: http://ollama:11434
+      EMBEDDING_SERVICE_URL: http://api-embeddings:8080
+      EMBEDDING_MODEL: llama3.2:1b
       SERVER_PORT: 8080
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
+      api-embeddings:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
