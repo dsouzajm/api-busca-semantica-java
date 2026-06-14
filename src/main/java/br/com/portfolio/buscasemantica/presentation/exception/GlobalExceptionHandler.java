@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ProblemDetail handleHttpMessageNotReadable(
-            HttpMessageNotReadableException ex) {
+    public ProblemDetail handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         String detalhe = "Requisição malformada";
         if (ex.getCause() instanceof InvalidFormatException ife && !ife.getPath().isEmpty()) {
             detalhe = "Valor inválido para o campo '%s': %s".formatted(
@@ -24,46 +23,39 @@ public class GlobalExceptionHandler {
                     ife.getValue()
             );
         }
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST, detalhe);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detalhe);
         problem.setTitle("Requisição inválida");
         return problem;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidationException(
-            MethodArgumentNotValidException ex) {
+    public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
         String mensagem = ex.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
 
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST, mensagem);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, mensagem);
         problem.setTitle("Requisição inválida");
         return problem;
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleIllegalArgument(IllegalArgumentException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST, ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problem.setTitle("Parâmetro inválido");
         return problem;
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
     public ProblemDetail handleUnsupportedOperation(UnsupportedOperationException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         problem.setTitle("Operação não suportada");
         return problem;
     }
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno. Tente novamente."
-        );
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno. Tente novamente.");
         problem.setTitle("Erro interno");
         return problem;
     }

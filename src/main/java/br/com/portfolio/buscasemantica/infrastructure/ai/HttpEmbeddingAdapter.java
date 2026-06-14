@@ -17,8 +17,7 @@ public class HttpEmbeddingAdapter implements EmbeddingPort {
     private final RestClient restClient;
 
     public HttpEmbeddingAdapter(
-            @Value("${app.embedding-service.url:http://api-embeddings:8080}")
-            String embeddingServiceUrl) {
+            @Value("${app.embedding-service.url:http://api-embeddings:8080}") String embeddingServiceUrl) {
 
         var factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofSeconds(10));

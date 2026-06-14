@@ -31,8 +31,7 @@ public class BuscaEmbeddingStrategy implements BuscaStrategy {
     public List<ResultadoBusca> buscar(String texto, int topK) {
         EmbeddingPort port = embeddingPort.orElseThrow(() ->
                 new UnsupportedOperationException(
-                        "Modo embedding indisponível:"
-                        + " configure a variável OPENAI_API_KEY"
+                        "Modo embedding indisponível: configure a variável OPENAI_API_KEY"
                 )
         );
         float[] embedding = port.gerarEmbedding(texto);

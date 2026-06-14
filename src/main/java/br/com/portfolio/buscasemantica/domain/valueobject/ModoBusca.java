@@ -21,9 +21,7 @@ public enum ModoBusca {
                 return modo;
             }
         }
-        String msg = "Modo de busca inválido: '%s'."
-                + " Valores aceitos: texto, embedding";
-        throw new IllegalArgumentException(msg.formatted(value));
+        throw new IllegalArgumentException("Modo de busca inválido: '%s'. Valores aceitos: texto, embedding".formatted(value));
     }
 
     @JsonValue

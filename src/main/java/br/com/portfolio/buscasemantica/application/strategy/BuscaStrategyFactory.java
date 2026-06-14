@@ -23,8 +23,7 @@ public class BuscaStrategyFactory {
     public BuscaStrategy getStrategy(ModoBusca modoBusca) {
         return Optional.ofNullable(strategies.get(modoBusca))
                 .orElseThrow(() -> new UnsupportedOperationException(
-                        ("Modo de busca não configurado: %s."
-                                + " Verifique as credenciais de IA.")
-                                .formatted(modoBusca.getValor())));
+                        "Modo de busca não configurado: %s. Verifique as credenciais de IA.".formatted(modoBusca.getValor())
+                ));
     }
 }
