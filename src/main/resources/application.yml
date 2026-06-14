@@ -25,7 +25,7 @@ spring:
 app:
   embedding-service:
     url: ${EMBEDDING_SERVICE_URL:http://localhost:8081}
-    model: ${EMBEDDING_MODEL:llama3.2:1b}
+    model: ${EMBEDDING_MODEL:nomic-embed-text}
 
 server:
   port: ${SERVER_PORT:8080}

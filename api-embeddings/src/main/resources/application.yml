@@ -10,9 +10,7 @@ spring:
     ollama:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       embedding:
-        model: ${OLLAMA_EMBEDDING_MODEL:llama3.2:1b}
-        options:
-          num-ctx: 2048
+        model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
 
 server:
   port: ${SERVER_PORT:8080}
