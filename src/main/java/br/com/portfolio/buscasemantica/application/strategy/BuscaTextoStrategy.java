@@ -1,11 +1,12 @@
 package br.com.portfolio.buscasemantica.application.strategy;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import br.com.portfolio.buscasemantica.domain.port.out.MemoriaRepositoryPort;
 import br.com.portfolio.buscasemantica.domain.valueobject.ModoBusca;
 import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class BuscaTextoStrategy implements BuscaStrategy {

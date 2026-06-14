@@ -34,7 +34,7 @@ class BuscaSemanticaControllerTest {
         when(buscaSemanticaUseCase.buscar(any(ModoBusca.class), anyString(), anyInt()))
                 .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java")));
 
-        mockMvc.perform(post("/busca-semanticas-memorias")
+        mockMvc.perform(post("/buscas-semanticas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -50,7 +50,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoTextoVazio() throws Exception {
-        mockMvc.perform(post("/busca-semanticas-memorias")
+        mockMvc.perform(post("/buscas-semanticas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -64,7 +64,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoModoBuscaInvalido() throws Exception {
-        mockMvc.perform(post("/busca-semanticas-memorias")
+        mockMvc.perform(post("/buscas-semanticas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -78,7 +78,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoTopKExcedeLimite() throws Exception {
-        mockMvc.perform(post("/busca-semanticas-memorias")
+        mockMvc.perform(post("/buscas-semanticas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

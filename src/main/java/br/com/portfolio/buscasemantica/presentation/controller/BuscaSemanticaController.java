@@ -1,9 +1,7 @@
 package br.com.portfolio.buscasemantica.presentation.controller;
 
-import br.com.portfolio.buscasemantica.domain.port.in.BuscaSemanticaUseCase;
-import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
-import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaRequest;
-import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaResponse;
+import java.util.List;
+
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import br.com.portfolio.buscasemantica.domain.port.in.BuscaSemanticaUseCase;
+import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
+import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaRequest;
+import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaResponse;
 
 @RestController
-@RequestMapping("/busca-semanticas-memorias")
+@RequestMapping("/buscas-semanticas")
 public class BuscaSemanticaController {
 
     private final BuscaSemanticaUseCase buscaSemanticaUseCase;

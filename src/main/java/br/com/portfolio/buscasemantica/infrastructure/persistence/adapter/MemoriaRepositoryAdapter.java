@@ -1,14 +1,15 @@
 package br.com.portfolio.buscasemantica.infrastructure.persistence.adapter;
 
-import br.com.portfolio.buscasemantica.domain.model.Memoria;
-import br.com.portfolio.buscasemantica.domain.port.out.MemoriaRepositoryPort;
-import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
-import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Component;
+
+import br.com.portfolio.buscasemantica.domain.model.Memoria;
+import br.com.portfolio.buscasemantica.domain.port.out.MemoriaRepositoryPort;
+import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
 
 @Component
 public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {

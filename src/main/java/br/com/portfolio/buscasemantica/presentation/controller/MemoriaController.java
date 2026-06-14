@@ -1,9 +1,5 @@
 package br.com.portfolio.buscasemantica.presentation.controller;
 
-import br.com.portfolio.buscasemantica.domain.model.Memoria;
-import br.com.portfolio.buscasemantica.domain.port.in.SalvarMemoriaUseCase;
-import br.com.portfolio.buscasemantica.presentation.dto.SalvarMemoriaRequest;
-import br.com.portfolio.buscasemantica.presentation.dto.SalvarMemoriaResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.com.portfolio.buscasemantica.domain.model.Memoria;
+import br.com.portfolio.buscasemantica.domain.port.in.SalvarMemoriaUseCase;
+import br.com.portfolio.buscasemantica.presentation.dto.SalvarMemoriaRequest;
+import br.com.portfolio.buscasemantica.presentation.dto.SalvarMemoriaResponse;
 
 @RestController
 @RequestMapping("/memorias")

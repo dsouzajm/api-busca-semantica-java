@@ -1,9 +1,9 @@
 package br.com.portfolio.buscasemantica.domain.port.out;
 
+import java.util.List;
+
 import br.com.portfolio.buscasemantica.domain.model.Memoria;
 import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
-
-import java.util.List;
 
 public interface MemoriaRepositoryPort {
 
