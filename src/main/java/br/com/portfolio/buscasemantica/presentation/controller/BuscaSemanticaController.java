@@ -1,9 +1,11 @@
 package br.com.portfolio.buscasemantica.presentation.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +17,7 @@ import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaRequest;
 import br.com.portfolio.buscasemantica.presentation.dto.BuscaSemanticaResponse;
 
 @RestController
-@RequestMapping("/buscas-semanticas")
+@RequestMapping("/{idCliente}/buscas-semanticas")
 public class BuscaSemanticaController {
 
     private final BuscaSemanticaUseCase buscaSemanticaUseCase;
@@ -26,9 +28,11 @@ public class BuscaSemanticaController {
 
     @PostMapping
     public ResponseEntity<List<BuscaSemanticaResponse>> buscar(
+            @PathVariable UUID idCliente,
             @Valid @RequestBody BuscaSemanticaRequest request) {
 
         List<ResultadoBusca> resultados = buscaSemanticaUseCase.buscar(
+                idCliente,
                 request.modoBusca(),
                 request.texto(),
                 request.topK()

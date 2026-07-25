@@ -1,6 +1,7 @@
 package br.com.portfolio.buscasemantica.application.strategy;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class BuscaTextoStrategy implements BuscaStrategy {
     }
 
     @Override
-    public List<ResultadoBusca> buscar(String texto, int topK) {
-        return repositoryPort.buscarPorTexto(texto, topK);
+    public List<ResultadoBusca> buscar(UUID idCliente, String texto, int topK) {
+        return repositoryPort.buscarPorTexto(idCliente, texto, topK);
     }
 }

@@ -1,6 +1,7 @@
 package br.com.portfolio.buscasemantica.application.usecase;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class BuscaSemanticaUseCaseImpl implements BuscaSemanticaUseCase {
     }
 
     @Override
-    public List<ResultadoBusca> buscar(ModoBusca modoBusca, String texto, int topK) {
-        return strategyFactory.getStrategy(modoBusca).buscar(texto, topK);
+    public List<ResultadoBusca> buscar(UUID idCliente, ModoBusca modoBusca, String texto, int topK) {
+        return strategyFactory.getStrategy(modoBusca).buscar(idCliente, texto, topK);
     }
 }

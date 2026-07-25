@@ -11,6 +11,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -29,12 +30,14 @@ class BuscaSemanticaControllerTest {
     @MockitoBean
     private BuscaSemanticaUseCase buscaSemanticaUseCase;
 
+    private static final UUID ID_CLIENTE = UUID.fromString("57ae0ee5-f030-4a3a-993c-f0aecf8f8b5c");
+
     @Test
     void deveBuscarPorTextoComSucesso() throws Exception {
-        when(buscaSemanticaUseCase.buscar(any(ModoBusca.class), anyString(), anyInt()))
+        when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), anyString(), anyInt()))
                 .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java", 0.75, 3)));
 
-        mockMvc.perform(post("/buscas-semanticas")
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -50,7 +53,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoTextoVazio() throws Exception {
-        mockMvc.perform(post("/buscas-semanticas")
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -64,7 +67,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoModoBuscaInvalido() throws Exception {
-        mockMvc.perform(post("/buscas-semanticas")
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -78,7 +81,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveRetornarBadRequestQuandoTopKExcedeLimite() throws Exception {
-        mockMvc.perform(post("/buscas-semanticas")
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

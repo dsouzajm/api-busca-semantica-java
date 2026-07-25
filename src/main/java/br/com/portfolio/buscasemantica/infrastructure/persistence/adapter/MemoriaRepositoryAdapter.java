@@ -21,17 +21,18 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
     }
 
     @Override
-    public List<ResultadoBusca> buscarPorTexto(String texto, int topK) {
+    public List<ResultadoBusca> buscarPorTexto(UUID idCliente, String texto, int topK) {
         return jdbcClient.sql("""
                 SELECT texto,
                        GREATEST(0.0, LEAST(1.0, similarity(texto, :query))) AS score,
                        significancia,
                        recorrencia
                 FROM memorias
-                WHERE similarity(texto, :query) > 0.05
+                WHERE id_cliente = :idCliente
                 ORDER BY score DESC
                 LIMIT :topK
                 """)
+                .param("idCliente", idCliente)
                 .param("query", texto)
                 .param("topK", topK)
                 .query((rs, rowNum) -> new ResultadoBusca(
@@ -44,7 +45,7 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
     }
 
     @Override
-    public List<ResultadoBusca> buscarPorEmbedding(float[] embedding, int topK) {
+    public List<ResultadoBusca> buscarPorEmbedding(UUID idCliente, float[] embedding, int topK) {
         String vectorLiteral = toVectorLiteral(embedding);
         return jdbcClient.sql("""
                 SELECT texto,
@@ -52,10 +53,12 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
                        significancia,
                        recorrencia
                 FROM memorias
-                WHERE embedding IS NOT NULL
+                WHERE id_cliente = :idCliente
+                  AND embedding IS NOT NULL
                 ORDER BY embedding <=> :embedding::halfvec
                 LIMIT :topK
                 """)
+                .param("idCliente", idCliente)
                 .param("embedding", vectorLiteral)
                 .param("topK", topK)
                 .query((rs, rowNum) -> new ResultadoBusca(

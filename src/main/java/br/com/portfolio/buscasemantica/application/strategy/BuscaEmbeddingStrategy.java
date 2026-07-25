@@ -2,6 +2,7 @@ package br.com.portfolio.buscasemantica.application.strategy;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -28,13 +29,13 @@ public class BuscaEmbeddingStrategy implements BuscaStrategy {
     }
 
     @Override
-    public List<ResultadoBusca> buscar(String texto, int topK) {
+    public List<ResultadoBusca> buscar(UUID idCliente, String texto, int topK) {
         EmbeddingPort port = embeddingPort.orElseThrow(() ->
                 new UnsupportedOperationException(
                         "Modo embedding indisponível: configure a variável OPENAI_API_KEY"
                 )
         );
         float[] embedding = port.gerarEmbedding(texto);
-        return repositoryPort.buscarPorEmbedding(embedding, topK);
+        return repositoryPort.buscarPorEmbedding(idCliente, embedding, topK);
     }
 }
