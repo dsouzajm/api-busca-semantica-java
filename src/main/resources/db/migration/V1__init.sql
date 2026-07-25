@@ -13,10 +13,6 @@ CREATE TABLE IF NOT EXISTS memorias
     recorrencia   INTEGER      NOT NULL DEFAULT floor(random() * 20 + 1)::INTEGER
 );
 
-CREATE INDEX IF NOT EXISTS idx_memorias_embedding_hnsw
-    ON memorias USING hnsw (embedding halfvec_cosine_ops)
-    WITH (m = 16, ef_construction = 64);
-
 CREATE INDEX IF NOT EXISTS idx_memorias_texto_trgm
     ON memorias USING gin (texto gin_trgm_ops);
 
