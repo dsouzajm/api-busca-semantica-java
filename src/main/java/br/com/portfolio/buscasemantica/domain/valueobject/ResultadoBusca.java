@@ -1,14 +1,15 @@
 package br.com.portfolio.buscasemantica.domain.valueobject;
 
 public record ResultadoBusca(
-        double scoreBusca,
+        double score,
+        double similaridade,
         String texto,
         double significancia,
         int recorrencia
 ) {
     public ResultadoBusca {
-        if (scoreBusca < 0.0 || scoreBusca > 1.0) {
-            throw new IllegalArgumentException("scoreBusca deve estar entre 0.0 e 1.0");
+        if (similaridade < 0.0 || similaridade > 1.0) {
+            throw new IllegalArgumentException("similaridade deve estar entre 0.0 e 1.0");
         }
     }
 }

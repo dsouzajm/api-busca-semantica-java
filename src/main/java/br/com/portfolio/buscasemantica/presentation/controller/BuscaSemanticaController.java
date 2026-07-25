@@ -40,7 +40,7 @@ public class BuscaSemanticaController {
         );
 
         List<BuscaSemanticaResponse> response = resultados.stream()
-                .map(r -> new BuscaSemanticaResponse(r.scoreBusca(), r.texto(), r.significancia(), r.recorrencia()))
+                .map(r -> new BuscaSemanticaResponse(r.score(), r.similaridade(), r.texto(), r.significancia(), r.recorrencia()))
                 .toList();
 
         return ResponseEntity.ok(response);

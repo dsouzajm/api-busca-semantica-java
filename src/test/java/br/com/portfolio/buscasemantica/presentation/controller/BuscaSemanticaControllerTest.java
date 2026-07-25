@@ -35,7 +35,7 @@ class BuscaSemanticaControllerTest {
     @Test
     void deveBuscarPorTextoComSucesso() throws Exception {
         when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), anyString(), any(), anyInt()))
-                .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java", 0.75, 3)));
+                .thenReturn(List.of(new ResultadoBusca(0.0, 0.92, "Spring Boot é um framework Java", 0.75, 3)));
 
         mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -47,14 +47,15 @@ class BuscaSemanticaControllerTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].scoreBusca").value(0.95))
+                .andExpect(jsonPath("$[0].score").value(0.0))
+                .andExpect(jsonPath("$[0].similaridade").value(0.92))
                 .andExpect(jsonPath("$[0].texto").value("Spring Boot é um framework Java"));
     }
 
     @Test
     void deveBuscarPorEmbeddingComSucesso() throws Exception {
         when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), any(), any(), anyInt()))
-                .thenReturn(List.of(new ResultadoBusca(0.88, "PGVector é uma extensão do PostgreSQL", 0.5, 1)));
+                .thenReturn(List.of(new ResultadoBusca(0.0, 0.81, "PGVector é uma extensão do PostgreSQL", 0.5, 1)));
 
         mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +67,8 @@ class BuscaSemanticaControllerTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].scoreBusca").value(0.88))
+                .andExpect(jsonPath("$[0].score").value(0.0))
+                .andExpect(jsonPath("$[0].similaridade").value(0.81))
                 .andExpect(jsonPath("$[0].texto").value("PGVector é uma extensão do PostgreSQL"));
     }
 

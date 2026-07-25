@@ -25,7 +25,7 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
         String vectorLiteral = toVectorLiteral(embedding);
         return jdbcClient.sql("""
                 SELECT texto,
-                       GREATEST(0.0, LEAST(1.0, 1 - (embedding <=> :embedding::halfvec))) AS score,
+                       1 - (embedding <=> :embedding::halfvec) / 2 AS similaridade,
                        significancia,
                        recorrencia
                 FROM memorias
@@ -38,7 +38,8 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
                 .param("embedding", vectorLiteral)
                 .param("topK", topK)
                 .query((rs, rowNum) -> new ResultadoBusca(
-                        rs.getDouble("score"),
+                        0.0,
+                        rs.getDouble("similaridade"),
                         rs.getString("texto"),
                         rs.getDouble("significancia"),
                         rs.getInt("recorrencia")
