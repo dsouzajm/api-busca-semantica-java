@@ -8,8 +8,6 @@ import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
 
 public interface MemoriaRepositoryPort {
 
-    List<ResultadoBusca> buscarPorTexto(UUID idCliente, String texto, int topK);
-
     List<ResultadoBusca> buscarPorEmbedding(UUID idCliente, float[] embedding, int topK);
 
     Memoria salvar(String texto, float[] embedding);

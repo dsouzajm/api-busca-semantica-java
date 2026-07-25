@@ -34,7 +34,7 @@ class BuscaSemanticaControllerTest {
 
     @Test
     void deveBuscarPorTextoComSucesso() throws Exception {
-        when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), anyString(), anyInt()))
+        when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), anyString(), any(), anyInt()))
                 .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java", 0.75, 3)));
 
         mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
@@ -49,6 +49,38 @@ class BuscaSemanticaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].scoreBusca").value(0.95))
                 .andExpect(jsonPath("$[0].texto").value("Spring Boot é um framework Java"));
+    }
+
+    @Test
+    void deveBuscarPorEmbeddingComSucesso() throws Exception {
+        when(buscaSemanticaUseCase.buscar(any(UUID.class), any(ModoBusca.class), any(), any(), anyInt()))
+                .thenReturn(List.of(new ResultadoBusca(0.88, "PGVector é uma extensão do PostgreSQL", 0.5, 1)));
+
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "modoBusca": "embedding",
+                                    "embedding": [0.1, 0.2, 0.3],
+                                    "topK": 5
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].scoreBusca").value(0.88))
+                .andExpect(jsonPath("$[0].texto").value("PGVector é uma extensão do PostgreSQL"));
+    }
+
+    @Test
+    void deveRetornarBadRequestQuandoEmbeddingAusente() throws Exception {
+        mockMvc.perform(post("/{idCliente}/buscas-semanticas", ID_CLIENTE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "modoBusca": "embedding",
+                                    "topK": 5
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -35,6 +35,7 @@ public class BuscaSemanticaController {
                 idCliente,
                 request.modoBusca(),
                 request.texto(),
+                request.embedding(),
                 request.topK()
         );
 

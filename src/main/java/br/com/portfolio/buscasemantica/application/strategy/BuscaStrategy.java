@@ -10,5 +10,5 @@ public interface BuscaStrategy {
 
     ModoBusca getModoBusca();
 
-    List<ResultadoBusca> buscar(UUID idCliente, String texto, int topK);
+    List<ResultadoBusca> buscar(UUID idCliente, String texto, List<Float> embedding, int topK);
 }

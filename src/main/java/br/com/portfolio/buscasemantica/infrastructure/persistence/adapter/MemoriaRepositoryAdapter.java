@@ -21,30 +21,6 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
     }
 
     @Override
-    public List<ResultadoBusca> buscarPorTexto(UUID idCliente, String texto, int topK) {
-        return jdbcClient.sql("""
-                SELECT texto,
-                       GREATEST(0.0, LEAST(1.0, similarity(texto, :query))) AS score,
-                       significancia,
-                       recorrencia
-                FROM memorias
-                WHERE id_cliente = :idCliente
-                ORDER BY score DESC
-                LIMIT :topK
-                """)
-                .param("idCliente", idCliente)
-                .param("query", texto)
-                .param("topK", topK)
-                .query((rs, rowNum) -> new ResultadoBusca(
-                        rs.getDouble("score"),
-                        rs.getString("texto"),
-                        rs.getDouble("significancia"),
-                        rs.getInt("recorrencia")
-                ))
-                .list();
-    }
-
-    @Override
     public List<ResultadoBusca> buscarPorEmbedding(UUID idCliente, float[] embedding, int topK) {
         String vectorLiteral = toVectorLiteral(embedding);
         return jdbcClient.sql("""

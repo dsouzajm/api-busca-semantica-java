@@ -1,12 +1,10 @@
 package br.com.portfolio.buscasemantica.application.strategy;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import br.com.portfolio.buscasemantica.domain.port.out.EmbeddingPort;
 import br.com.portfolio.buscasemantica.domain.port.out.MemoriaRepositoryPort;
 import br.com.portfolio.buscasemantica.domain.valueobject.ModoBusca;
 import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
@@ -15,12 +13,9 @@ import br.com.portfolio.buscasemantica.domain.valueobject.ResultadoBusca;
 public class BuscaEmbeddingStrategy implements BuscaStrategy {
 
     private final MemoriaRepositoryPort repositoryPort;
-    private final Optional<EmbeddingPort> embeddingPort;
 
-    public BuscaEmbeddingStrategy(MemoriaRepositoryPort repositoryPort,
-                                   Optional<EmbeddingPort> embeddingPort) {
+    public BuscaEmbeddingStrategy(MemoriaRepositoryPort repositoryPort) {
         this.repositoryPort = repositoryPort;
-        this.embeddingPort = embeddingPort;
     }
 
     @Override
@@ -29,13 +24,15 @@ public class BuscaEmbeddingStrategy implements BuscaStrategy {
     }
 
     @Override
-    public List<ResultadoBusca> buscar(UUID idCliente, String texto, int topK) {
-        EmbeddingPort port = embeddingPort.orElseThrow(() ->
-                new UnsupportedOperationException(
-                        "Modo embedding indisponível: configure a variável OPENAI_API_KEY"
-                )
-        );
-        float[] embedding = port.gerarEmbedding(texto);
-        return repositoryPort.buscarPorEmbedding(idCliente, embedding, topK);
+    public List<ResultadoBusca> buscar(UUID idCliente, String texto, List<Float> embedding, int topK) {
+        return repositoryPort.buscarPorEmbedding(idCliente, toFloatArray(embedding), topK);
+    }
+
+    private float[] toFloatArray(List<Float> embedding) {
+        float[] array = new float[embedding.size()];
+        for (int i = 0; i < embedding.size(); i++) {
+            array[i] = embedding.get(i);
+        }
+        return array;
     }
 }

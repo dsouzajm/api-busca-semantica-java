@@ -20,7 +20,7 @@ public class BuscaSemanticaUseCaseImpl implements BuscaSemanticaUseCase {
     }
 
     @Override
-    public List<ResultadoBusca> buscar(UUID idCliente, ModoBusca modoBusca, String texto, int topK) {
-        return strategyFactory.getStrategy(modoBusca).buscar(idCliente, texto, topK);
+    public List<ResultadoBusca> buscar(UUID idCliente, ModoBusca modoBusca, String texto, List<Float> embedding, int topK) {
+        return strategyFactory.getStrategy(modoBusca).buscar(idCliente, texto, embedding, topK);
     }
 }
