@@ -2,7 +2,9 @@ package br.com.portfolio.buscasemantica.domain.valueobject;
 
 public record ResultadoBusca(
         double scoreBusca,
-        String texto
+        String texto,
+        double significancia,
+        int recorrencia
 ) {
     public ResultadoBusca {
         if (scoreBusca < 0.0 || scoreBusca > 1.0) {

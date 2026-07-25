@@ -28,6 +28,6 @@ public class MemoriaController {
         Memoria memoria = salvarMemoriaUseCase.salvar(request.texto());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new SalvarMemoriaResponse(memoria.id(), memoria.texto(), memoria.criadoEm()));
+                .body(new SalvarMemoriaResponse(memoria.id(), memoria.texto(), memoria.criadoEm(), memoria.significancia(), memoria.recorrencia()));
     }
 }

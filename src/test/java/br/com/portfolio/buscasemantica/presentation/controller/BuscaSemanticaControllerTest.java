@@ -32,7 +32,7 @@ class BuscaSemanticaControllerTest {
     @Test
     void deveBuscarPorTextoComSucesso() throws Exception {
         when(buscaSemanticaUseCase.buscar(any(ModoBusca.class), anyString(), anyInt()))
-                .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java")));
+                .thenReturn(List.of(new ResultadoBusca(0.95, "Spring Boot é um framework Java", 0.75, 3)));
 
         mockMvc.perform(post("/buscas-semanticas")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -7,5 +7,7 @@ public record Memoria(
         UUID id,
         String texto,
         float[] embedding,
-        LocalDateTime criadoEm
+        LocalDateTime criadoEm,
+        double significancia,
+        int recorrencia
 ) {}

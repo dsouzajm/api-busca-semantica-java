@@ -24,7 +24,9 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
     public List<ResultadoBusca> buscarPorTexto(String texto, int topK) {
         return jdbcClient.sql("""
                 SELECT texto,
-                       GREATEST(0.0, LEAST(1.0, similarity(texto, :query))) AS score
+                       GREATEST(0.0, LEAST(1.0, similarity(texto, :query))) AS score,
+                       significancia,
+                       recorrencia
                 FROM memorias
                 WHERE similarity(texto, :query) > 0.05
                 ORDER BY score DESC
@@ -34,7 +36,9 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
                 .param("topK", topK)
                 .query((rs, rowNum) -> new ResultadoBusca(
                         rs.getDouble("score"),
-                        rs.getString("texto")
+                        rs.getString("texto"),
+                        rs.getDouble("significancia"),
+                        rs.getInt("recorrencia")
                 ))
                 .list();
     }
@@ -44,7 +48,9 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
         String vectorLiteral = toVectorLiteral(embedding);
         return jdbcClient.sql("""
                 SELECT texto,
-                       GREATEST(0.0, LEAST(1.0, 1 - (embedding <=> :embedding::halfvec))) AS score
+                       GREATEST(0.0, LEAST(1.0, 1 - (embedding <=> :embedding::halfvec))) AS score,
+                       significancia,
+                       recorrencia
                 FROM memorias
                 WHERE embedding IS NOT NULL
                 ORDER BY embedding <=> :embedding::halfvec
@@ -54,7 +60,9 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
                 .param("topK", topK)
                 .query((rs, rowNum) -> new ResultadoBusca(
                         rs.getDouble("score"),
-                        rs.getString("texto")
+                        rs.getString("texto"),
+                        rs.getDouble("significancia"),
+                        rs.getInt("recorrencia")
                 ))
                 .list();
     }
@@ -65,7 +73,7 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
         return jdbcClient.sql("""
                 INSERT INTO memorias (texto, embedding)
                 VALUES (:texto, :embedding::halfvec)
-                RETURNING id, criado_em
+                RETURNING id, criado_em, significancia, recorrencia
                 """)
                 .param("texto", texto)
                 .param("embedding", vectorLiteral)
@@ -73,7 +81,9 @@ public class MemoriaRepositoryAdapter implements MemoriaRepositoryPort {
                         rs.getObject("id", UUID.class),
                         texto,
                         embedding,
-                        rs.getObject("criado_em", LocalDateTime.class)
+                        rs.getObject("criado_em", LocalDateTime.class),
+                        rs.getDouble("significancia"),
+                        rs.getInt("recorrencia")
                 ))
                 .single();
     }

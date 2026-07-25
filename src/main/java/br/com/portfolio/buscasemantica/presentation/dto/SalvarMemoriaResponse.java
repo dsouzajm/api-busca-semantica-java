@@ -6,5 +6,7 @@ import java.util.UUID;
 public record SalvarMemoriaResponse(
         UUID id,
         String texto,
-        LocalDateTime criadoEm
+        LocalDateTime criadoEm,
+        double significancia,
+        int recorrencia
 ) {}
